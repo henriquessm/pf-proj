@@ -1,7 +1,5 @@
 package br.insper.projeto.historico.service;
 
-import br.insper.projeto.common.TokenUtils;
-import br.insper.projeto.historico.dto.CatalogoDTO;
 import br.insper.projeto.historico.dto.PlanoUsuarioDTO;
 
 import br.insper.projeto.historico.model.Historico;
@@ -12,14 +10,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class HistoricoService {
@@ -35,7 +28,7 @@ public class HistoricoService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         // URL simplificada
-        String url = "http://184.72.80.215/usuario";
+        String url = "http://184.72.80.215/usuario/validate";
 
         try {
             ResponseEntity<PlanoUsuarioDTO> response = restTemplate.exchange(
@@ -62,7 +55,7 @@ public class HistoricoService {
 
 
     // função que lista todos os filmes do histórico, podendo filtrar por data, título e gênero
-    public List<Historico> listarHistorico(String jwtToken, LocalDateTime data, String titulo, String genero) {
+    public List<Historico> listarHistorico(String jwtToken) {
 //        if (!usuarioTemPlanoAtivo(jwtToken)) {
 //            throw new RuntimeException("Usuário não tem plano ativo");
 //        }
@@ -70,20 +63,7 @@ public class HistoricoService {
         String email = TokenUtils.getEmailFromToken(jwtToken);
 
         List<Historico> historico = historicoRepository.findByEmail(email);
-        //ArrayList<Historico> response = new ArrayList<>();
 
-        //Stream<Historico> s = response.stream();
-
-//        if (data != null) {
-//            historico.removeIf(h -> !h.getDataHistorico().equals(data));
-//        }
-//
-//        if (titulo != null) {
-//            historico.removeIf(h -> !h.getFilmeId().equals(titulo));
-//        }
-//        if (genero != null) {
-//            historico.removeIf(h -> !h.getFilmeId().equals(genero));
-//        }
 
         return historico;
     }

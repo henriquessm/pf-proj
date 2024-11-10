@@ -4,16 +4,18 @@ import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
 import lombok.SneakyThrows;
 
+import java.text.ParseException;
+
 public class TokenUtils {
 
     @SneakyThrows
-    public static String getEmailFromToken(String token) {
+    public static String getEmailFromToken(String token) throws ParseException {
         JWT jwt = JWTParser.parse(token.split(" ")[1]);
         return (String) jwt.getJWTClaimsSet().getClaim("email");
     }
 
     @SneakyThrows
-    public static String getIss(String token) {
+    public static String getIss(String token) throws ParseException {
         JWT jwt = JWTParser.parse(token.split(" ")[1]);
         String iss = (String) jwt.getJWTClaimsSet().getClaim("iss");
         return iss.substring(iss.lastIndexOf('/') + 1);

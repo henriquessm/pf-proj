@@ -29,7 +29,7 @@ public class HistoricoController {
             @RequestParam(required = false) String titulo,
             @RequestParam(required = false) String genero) {
 
-        var historico = historicoService.listarHistorico(jwtToken, data, titulo, genero);
+        var historico = historicoService.listarHistorico(jwtToken);
         return ResponseEntity.ok(historico);
     }
 

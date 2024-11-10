@@ -6,8 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequestMapping("/historico")
@@ -24,10 +22,7 @@ public class HistoricoController {
 
     @GetMapping
     public ResponseEntity<?> listarHistorico(
-            @RequestHeader("Authorization") String jwtToken,
-            @RequestParam(required = false) LocalDateTime data,
-            @RequestParam(required = false) String titulo,
-            @RequestParam(required = false) String genero) {
+            @RequestHeader("Authorization") String jwtToken) {
 
         var historico = historicoService.listarHistorico(jwtToken);
         return ResponseEntity.ok(historico);

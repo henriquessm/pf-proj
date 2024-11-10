@@ -47,7 +47,7 @@ jobs:
         context: .
         file: ./Dockerfile
         push: true
-        tags: henriquessm/provap:${{ github.sha }}
+        tags: henriquessm/pf-proj:${{ github.sha }}
 
     - name: executing remote ssh commands using password
       uses: appleboy/ssh-action@master
@@ -59,4 +59,4 @@ jobs:
         script: |
           docker stop provapf
           docker rm --force provapf
-          docker run -d -p 8080:8080 --network=rede --name provapf henriquessm/provapf:${{ github.sha }}
+          docker run -d -p 8080:8080 --network=rede --name provapf henriquessm/pf-proj:${{ github.sha }}

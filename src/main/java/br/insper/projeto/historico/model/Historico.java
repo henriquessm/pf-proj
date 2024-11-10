@@ -2,27 +2,24 @@ package br.insper.projeto.historico.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import org.springframework.data.annotation.Id;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import java.time.LocalDateTime;
 
-@Document(collection = "historico")
 @Getter
 @Setter
+
 public class Historico {
-    @MongoId
-    private String id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
     private String email;
 
-    private String filmeId;
-
-    private LocalDateTime dataHistorico;
-
-    private Integer tempoAssistido;
-
-    private String genero;
 
 
 }

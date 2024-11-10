@@ -23,7 +23,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         JwtIssuerAuthenticationManagerResolver authenticationManagerResolver = JwtIssuerAuthenticationManagerResolver
-                .fromTrustedIssuers(Arrays.asList("https://zambom.botcity.dev:8050/realms/teste"));
+                .fromTrustedIssuers(Arrays.asList("http://184.72.80.215/usuario/validate"));
 
         http
                 .authorizeHttpRequests(authorize ->

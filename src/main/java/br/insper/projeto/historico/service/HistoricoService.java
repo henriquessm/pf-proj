@@ -20,7 +20,7 @@ public class HistoricoService {
     @Autowired
     private HistoricoRepository historicoRepository;
 
-    private String usuarioPapel(String jwtToken) {
+    private PlanoUsuarioDTO achaUsuario(String jwtToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + jwtToken);
@@ -42,7 +42,7 @@ public class HistoricoService {
                 PlanoUsuarioDTO planoUsuario = response.getBody();
 
 
-                return planoUsuario.getPapel();
+                return planoUsuario;
             }
             else {
                 throw new RuntimeException("Usuário não encontrado");
@@ -60,7 +60,7 @@ public class HistoricoService {
 //            throw new RuntimeException("Usuário não tem plano ativo");
 //        }
 
-        String email = TokenUtils.getEmailFromToken(jwtToken);
+        String email = achaUsuario(jwtToken).getEmail();
 
         List<Historico> historico = historicoRepository.findByEmail(email);
 
@@ -75,7 +75,7 @@ public class HistoricoService {
 
 
         Historico historico = new Historico();
-        historico.setEmail(TokenUtils.getEmailFromToken(jwtToken));
+        historico.setEmail(achaUsuario(jwtToken).getEmail());
         historicoRepository.save(historico);
 
         return historico;

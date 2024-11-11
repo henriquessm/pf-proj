@@ -1,5 +1,6 @@
 package br.insper.projeto.historico.service;
 
+import br.insper.projeto.historico.dto.CompraDTO;
 import br.insper.projeto.historico.dto.PlanoUsuarioDTO;
 
 import br.insper.projeto.historico.model.Historico;
@@ -14,6 +15,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -56,25 +58,55 @@ public class HistoricoService {
 
 
 
-    public List<Historico> listarHistorico(String jwtToken) {
+    public List<Historico> listarHistorico(String jwtToken, Integer ano, String marca, String modelo) {
 
+        // Obtendo o email a partir do token JWT
+        String email = achaUsuario(jwtToken) != null ? achaUsuario(jwtToken).getEmail() : null;
 
-        String email = achaUsuario(jwtToken).getEmail();
+        if (email == null) {
+            throw new IllegalArgumentException("Token JWT inválido ou usuário não encontrado.");
+        }
 
+        // Buscando histórico pelo email
         List<Historico> historico = historicoRepository.findByEmail(email);
 
+        // Verifica se o histórico não é nulo para evitar NullPointerException
+        if (historico == null) {
+            return Collections.emptyList(); // Retorna uma lista vazia se nenhum histórico for encontrado
+        }
+
+        // Filtrando pelo ano, se fornecido
+        if (ano != null) {
+            historico.removeIf(h -> !h.getAno().equals(ano));
+        }
+
+        // Filtrando pelo modelo, se fornecido (corrigido para usar getModelo)
+        if (modelo != null) {
+            historico.removeIf(h -> !h.getModelo().equals(modelo));
+        }
+
+        // Filtrando pela marca, se fornecido
+        if (marca != null) {
+            historico.removeIf(h -> !h.getMarca().equals(marca));
+        }
 
         return historico;
     }
 
-    public Historico adicionarAoHistorico(String jwtToken) {
+
+    public Historico adicionarCompra(String jwtToken, CompraDTO compraDTO) {
 
 
+        Historico compra = new Historico();
 
-        Historico historico = new Historico();
-        historico.setEmail(achaUsuario(jwtToken).getEmail());
-        historicoRepository.save(historico);
-        return historico;
+        compra.setEmail(achaUsuario(jwtToken).getEmail());
+        compra.setAno(compraDTO.getAno());
+        compra.setMarca(compraDTO.getMarca());
+        compra.setComprador(achaUsuario(jwtToken).getNome());
+        compra.setModelo(compraDTO.getModelo());
+
+        historicoRepository.save(compra);
+        return compra;
     }
 
 

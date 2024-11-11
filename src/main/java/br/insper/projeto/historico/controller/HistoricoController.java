@@ -1,5 +1,6 @@
 package br.insper.projeto.historico.controller;
 
+import br.insper.projeto.historico.dto.CompraDTO;
 import br.insper.projeto.historico.service.HistoricoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,16 +16,19 @@ public class HistoricoController {
     private HistoricoService historicoService;
 
     @PostMapping
-    public ResponseEntity<?> adicionarAoHistorico(@RequestHeader("Authorization") String jwtToken) {
-        var h = historicoService.adicionarAoHistorico(jwtToken);
+    public ResponseEntity<?> adicionarAoHistorico(@RequestHeader("Authorization") String jwtToken, @RequestBody CompraDTO compraDTO) {
+        var h = historicoService.adicionarCompra(jwtToken, compraDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(h);
     }
 
     @GetMapping
     public ResponseEntity<?> listarHistorico(
-            @RequestHeader("Authorization") String jwtToken) {
+            @RequestHeader("Authorization") String jwtToken,
+            @RequestParam(required = false) Integer ano,
+            @RequestParam(required = false) String marca,
+            @RequestParam(required = false) String modelo) {
 
-        var historico = historicoService.listarHistorico(jwtToken);
+        var historico = historicoService.listarHistorico(jwtToken, ano, marca, modelo);
         return ResponseEntity.ok(historico);
     }
 

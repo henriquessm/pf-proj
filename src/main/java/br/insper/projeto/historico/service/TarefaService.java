@@ -75,7 +75,7 @@ public class TarefaService {
 
         return tarefa;
     }
-    public List<Tarefa> listarTarefaId(String jwtToken, String id) {
+    public Tarefa listarTarefaId(String jwtToken, String id) {
 
         // Obtendo o email a partir do token JWT
         String email = achaUsuario(jwtToken) != null ? achaUsuario(jwtToken).getEmail() : null;
@@ -89,9 +89,13 @@ public class TarefaService {
         }
 
         // Buscando histórico pelo email
-        List<Tarefa> tarefa = tarefaRepository.findAll();
+        Optional<Tarefa> tarefa = tarefaRepository.findById(id);
 
-        return tarefa;
+        if (tarefa.isEmpty()) {
+            throw new RuntimeException("Tarefa não encontrada");
+        }
+
+        return tarefa.get();
     }
 
 

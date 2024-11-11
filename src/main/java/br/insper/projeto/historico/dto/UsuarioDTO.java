@@ -1,6 +1,6 @@
 package br.insper.projeto.historico.dto;
 
-public class PlanoUsuarioDTO {
+public class UsuarioDTO {
     private String nome;
     private String email;
     private String cpf;
@@ -8,10 +8,10 @@ public class PlanoUsuarioDTO {
     private String password;
     private String papel;
 
-    public PlanoUsuarioDTO() {
+    public UsuarioDTO() {
     }
 
-    public PlanoUsuarioDTO(String nome, String email, String cpf, String password, String papel) {
+    public UsuarioDTO(String nome, String email, String cpf, String password, String papel) {
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;

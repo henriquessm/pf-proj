@@ -29,10 +29,5 @@ public class HistoricoController {
     }
 
 
-//    @GetMapping("/resumo")
-//    public ResponseEntity<?> gerarResumoUsuario(@RequestHeader("Authorization") String jwtToken) {
-//        var resumo = historicoService.gerarResumoUsuario(jwtToken);
-//        return ResponseEntity.ok(resumo);
-//    }
 
 }

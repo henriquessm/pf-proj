@@ -10,6 +10,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -23,11 +25,9 @@ public class HistoricoService {
     private PlanoUsuarioDTO achaUsuario(String jwtToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + jwtToken);
+        headers.set("Authorization", jwtToken);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        // URL simplificada
         String url = "http://184.72.80.215/usuario/validate";
 
         try {
@@ -40,25 +40,24 @@ public class HistoricoService {
 
             if (response.getStatusCode().is2xxSuccessful()) {
                 PlanoUsuarioDTO planoUsuario = response.getBody();
-
-
-                return planoUsuario;
+                    return planoUsuario;
             }
             else {
-                throw new RuntimeException("Usuário não encontrado");
+                throw new RuntimeException("Usuário não encontrado. Status code: " + response.getStatusCode());
             }
-        }
-        catch (Exception e) {
+        } catch (HttpClientErrorException e) {
+            throw new RuntimeException("Erro de cliente ao verificar o papel do usuário: " + e.getStatusCode(), e);
+        } catch (HttpServerErrorException e) {
+            throw new RuntimeException("Erro de servidor ao verificar o papel do usuário: " + e.getStatusCode(), e);
+        } catch (Exception e) {
             throw new RuntimeException("Erro ao verificar papel do usuário", e);
         }
     }
 
 
-    // função que lista todos os filmes do histórico, podendo filtrar por data, título e gênero
+
     public List<Historico> listarHistorico(String jwtToken) {
-//        if (!usuarioTemPlanoAtivo(jwtToken)) {
-//            throw new RuntimeException("Usuário não tem plano ativo");
-//        }
+
 
         String email = achaUsuario(jwtToken).getEmail();
 
@@ -69,56 +68,16 @@ public class HistoricoService {
     }
 
     public Historico adicionarAoHistorico(String jwtToken) {
-//        if (!usuarioTemPlanoAtivo(jwtToken)) {
-//            throw new RuntimeException("Usuário não tem plano ativo");
-//        }
+
 
 
         Historico historico = new Historico();
         historico.setEmail(achaUsuario(jwtToken).getEmail());
         historicoRepository.save(historico);
-
         return historico;
     }
 
-//    public String gerarResumoUsuario(String jwtToken) {
-////        if (!usuarioTemPlanoAtivo(jwtToken)) {
-////            throw new RuntimeException("Usuário não tem plano ativo");
-////        }
-//
-//        String email = TokenUtils.getEmailFromToken(jwtToken);
-//
-//        List<Historico> historico = historicoRepository.findByEmail(email);
-//        int tempoTotal = 0;
-//
-//        Map<String, Integer> generoContagemMap = new HashMap<>();
-//
-//        for (Historico h : historico) {
-//            tempoTotal += h.getTempoAssistido();
-//
-//            String genero = h.getGenero();
-//            generoContagemMap.put(genero, generoContagemMap.getOrDefault(genero, 0) + 1);
-//        }
-//
-//        // Ordenar os gêneros pelo número de filmes assistidos em ordem decrescente
-//        List<Map.Entry<String, Integer>> generosOrdenados = new ArrayList<>(generoContagemMap.entrySet());
-//        generosOrdenados.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
-//
-//        StringBuilder resumo = new StringBuilder();
-//        resumo.append("Tempo total de filmes assistidos: ").append(tempoTotal).append(" minutos\n");
-//        resumo.append("Gêneros mais assistidos: ");
-//
-//        for (Map.Entry<String, Integer> entry : generosOrdenados) {
-//            resumo.append(entry.getKey()).append(" (").append(entry.getValue()).append(" filmes), ");
-//        }
-//
-//        // Remover a última vírgula e espaço, se necessário
-//        if (!generoContagemMap.isEmpty()) {
-//            resumo.setLength(resumo.length() - 2);
-//        }
-//
-//        return resumo.toString();
-//    }
+
 
 
 
